@@ -18,10 +18,9 @@ html, body{
 #main-container{
   width: 100%;
   height: 100%;
-  position: absolute;
-  /* display: flex;
-  justify-content: center;
-  place-items: center; */
+  position: relative;
+  padding: 8px;
+  /* position: absolute; */
 }
 
 #canvas-container{
@@ -35,4 +34,10 @@ html, body{
 #main-canvas{
   width: 100%;
   height: 100%;
+}
+
+#reset-button{
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }

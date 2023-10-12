@@ -152,6 +152,8 @@ function getMatchingTile(surroundings){
   return matchingTiles[Math.floor(Math.random() * matchingTiles.length)]
 }
 function drawGrid(){
+  ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
+
   for(let x = 0; x < gridSize.x; x++){
     for(let y = 0; y < gridSize.y; y++){
       if(grid[x][y]==undefined) continue
@@ -163,3 +165,13 @@ function drawGrid(){
 getGridData()
 
 drawGrid()
+
+function reset(){
+  console.log("test")
+  for(let i = 0; i < grid.length; i++){
+    grid[i] = new Array(gridSize.y)
+  }
+  getGridData()
+
+drawGrid()
+}
