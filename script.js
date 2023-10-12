@@ -5,7 +5,7 @@ const canvasSize = {
   height: 1000
 }
 
-const tileSize = 100
+const tileSize = 20
 
 const canvas = document.getElementById("main-canvas")
 const ctx = canvas.getContext("2d")
@@ -23,16 +23,6 @@ const tilePixel = tileSize / 10
 
 const color = "white"
 ctx.fillStyle = color
-
-function drawTile3(pos){
-  ctx.beginPath()
-  ctx.fillStyle = color
-  ctx.rect(pos.x+tilePixel*3, pos.y, tilePixel*4, tileSize)
-  ctx.rect(pos.x, pos.y+tilePixel*3, tilePixel*2, tilePixel*4)
-  ctx.rect(pos.x+tilePixel*8, pos.y+tilePixel *3, tilePixel*2, tilePixel*4)
-  ctx.fill()
-  ctx.closePath()
-}
 
 
 
@@ -89,59 +79,87 @@ const gridSize = {
   x: Math.floor(canvasSize.width / tileSize),
   y: Math.floor(canvasSize.height / tileSize)
 }
-console.log(gridSize)
 
-const grid = new Array(gridSize.y).fill(new Array(gridSize.x))
+// const grid = new Array(gridSize.y).fill(new Array(gridSize.x))
+const grid = new Array(gridSize.x)
+for(let i = 0; i < grid.length; i++){
+  grid[i] = new Array(gridSize.y)
+}
 
-grid[0][0] = 4
+ grid[0][0] = 4
+
 
 function getGridData(){
   for(let x = 0; x < gridSize.x; x++){
     for(let y = 0; y < gridSize.y; y++){
       if(grid[x][y]!=undefined) continue
-      const directions = []
+      let surroundings = {
+        top: undefined,
+        right: undefined,
+        bottom: undefined,
+        left: undefined
+      }
       let top = y-1 >= 0 ? grid[x][y-1] : -1
       let right = x+1 < gridSize.x ? grid[x+1][y] : -1
       let bottom = y+1 < gridSize.y ? grid[x][y+1] : -1
-      let left = x-1 >= 0 ? grid[x-1][y] : -1
-      console.log(x, y, tiles[top])
-      top = top ==undefined ? undefined : tiles[top].connections.includes(2) ? 0 : undefined
-      right = right == undefined ? undefined : tiles[right].connections.includes(1) ? 3 : undefined
-      bottom = bottom == undefined ? undefined : tiles[bottom].connections.includes(0) ? 2 : undefined
-      left = left == undefined ? undefined : tiles[left].connections.includes(3) ? 1 : undefined
-      if(top) directions.push(top)
-      if(right) directions.push(right)
-      if(bottom) directions.push(bottom)
-      if(left) directions.push(left)
-      grid[x][y] = getMatchingTile(directions)
+      let left = x-1 >= 0 ? grid[x-1][y] : -1 
+      if(top==undefined) surroundings.top = undefined
+      else if(top==-1 || !tiles[top].connections.includes(2)) surroundings.top = -1
+      else surroundings.top = 0
+
+      if(right==undefined) surroundings.right = undefined
+      else if(right==-1 || !tiles[right].connections.includes(3)) surroundings.right = -1
+      else surroundings.right = 1
+
+      if(bottom==undefined) surroundings.bottom = undefined
+      else if(bottom==-1 || !tiles[bottom].connections.includes(0)) surroundings.bottom = -1
+      else surroundings.bottom = 2
+
+      if(left==undefined) surroundings.left = undefined
+      else if(left==-1 || !tiles[left].connections.includes(1)) surroundings.left = -1
+      else surroundings.left = 3
+      
+
+      // return
+      grid[x][y] = getMatchingTile(surroundings)
     }
   }
 }
 
-let checked = false
 
-function getMatchingTile(directions){
-  const missingDirection = [0, 1, 2, 3].filter((e)=> !(directions.includes(e)))
+function getMatchingTile(surroundings){
   const matchingTiles = []
-  for(let i = 0; i < tiles.length; i++){
-    const matches = !directions.some((e) => !(tiles[i].points.includes(e)))
-    if(matches) matchingTiles.push(i)
+  const forcedConnections = []
+  const blocked = []
+  for(const direction in surroundings){
+    const directionValue = surroundings[direction]
+    if(directionValue==-1) {
+      if(direction=="top")blocked.push(0)
+      if(direction=="right")blocked.push(1)
+      if(direction=="bottom")blocked.push(2)
+      if(direction=="left")blocked.push(3)
+      
+    }
+    else if(directionValue !== undefined) forcedConnections.push(directionValue)
   }
-  return matchingTiles[Math.floor(Math.random() * matchingTiles.length)]
 
+  for(let i = 0; i < tiles.length; i++){
+    const hasNeededConnections = forcedConnections.every(v => tiles[i].connections.includes(v));
+    const hasBlockedConnecitons = !blocked.every((e) => !tiles[i].connections.includes(e))
+    if(hasNeededConnections && !hasBlockedConnecitons) matchingTiles.push(i)
+  }
+
+  return matchingTiles[Math.floor(Math.random() * matchingTiles.length)]
 }
-// getGridData()
 function drawGrid(){
-  
-  for(let i = 0; i < gridSize.y; i++){
-    for(let j = 0; j < gridSize.x; j++){
-      const pos = {
-        x: j * tileSize,
-        y: i * tileSize
-      }
-      drawTile(pos, grid[i][j])
+  for(let x = 0; x < gridSize.x; x++){
+    for(let y = 0; y < gridSize.y; y++){
+      if(grid[x][y]==undefined) continue
+      const pos = {x: x*tileSize, y: y*tileSize}
+      drawTile(pos, grid[x][y])
     }
   }
 }
+getGridData()
 
 drawGrid()
