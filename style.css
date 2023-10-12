@@ -29,7 +29,6 @@ html, body{
   max-width: 100%;
   max-height: 100%;
   aspect-ratio: 1;
-  outline: 1px solid red;
   background-color: black;
 }
 
