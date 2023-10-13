@@ -1,8 +1,8 @@
 "use strict"
 
 const canvasSize = {
-  width:  600,
-  height:  600
+  width:  1000,
+  height:  1000
 }
 
 const tileSize = 100
@@ -167,15 +167,18 @@ function getMatchingTile(surroundings){
 
   return matchingTiles[Math.floor(Math.random() * matchingTiles.length)]
 }
-function drawGrid(){
+async function drawGrid(){
   ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
 
   for(let x = 0; x < gridSize.x; x++){
     for(let y = 0; y < gridSize.y; y++){
+      await sleep(1);
+
       if(grid[x][y]==undefined) continue
       const pos = {x: x*tileSize, y: y*tileSize}
       drawTile(pos, grid[x][y])
     }
+
   }
 }
 getGridData()
@@ -189,6 +192,10 @@ function reset(){
   }
   getGridData()
   drawGrid()
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function fillVoid(pos){
