@@ -58,10 +58,26 @@ const tiles = [
   {
     points: [[3, 0, 4, 7],[7, 3, 3, 4]],
     connections: [0, 1]
-  }
+  },
+  // {
+  //   points: [[3, 0, 4, 10], [0, 3, 3, 4]],
+  //   connections: [0, 2, 3]
+  // },
+  // {
+  //   points: [[3, 0, 4, 10], [7, 3, 3, 4]],
+  //   connections: [0, 1, 2]
+  // },
+  // {
+  //   points: [[0, 3, 10, 4], [3, 0, 4, 3]],
+  //   connections: [0, 1, 3]
+  // },
+  // {
+  //   points: [[0, 3, 10, 4], [3, 7, 4, 3]],
+  //   connections: [1, 2, 3]
+  // }
 ]
 
-function drawTile(pos, tileIndex){
+function drawTile(pos, tileIndex, clear=false){
   const tileData = tiles[tileIndex].points
   ctx.beginPath()
   ctx.fillStyle = color
@@ -172,6 +188,11 @@ function reset(){
     grid[i] = new Array(gridSize.y)
   }
   getGridData()
-
-drawGrid()
+  drawGrid()
 }
+
+function fillVoid(pos){
+   
+}
+
+
