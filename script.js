@@ -5,7 +5,7 @@ const canvasSize = {
   height:  1000
 }
 
-const tileSize = 100
+const tileSize = 10
 
 const canvas = document.getElementById("main-canvas")
 const ctx = canvas.getContext("2d")
