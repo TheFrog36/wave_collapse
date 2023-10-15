@@ -5,7 +5,7 @@ const canvasSize = {
   height:  1000
 }
 
-const tileSize = 10
+const tileSize = 100
 
 const canvas = document.getElementById("main-canvas")
 const ctx = canvas.getContext("2d")
@@ -172,7 +172,7 @@ async function drawGrid(){
 
   for(let x = 0; x < gridSize.x; x++){
     for(let y = 0; y < gridSize.y; y++){
-      // await sleep(1);
+      await sleep(1);
 
       if(grid[x][y]==undefined) continue
       const pos = {x: x*tileSize, y: y*tileSize}
