@@ -1,11 +1,11 @@
 "use strict"
 
 const canvasSize = {
-  width:  1000,
-  height:  1000
+  width:  10000,
+  height:  10000
 }
 
-const tileSize = 100
+const tileSize = 10
 
 const canvas = document.getElementById("main-canvas")
 const ctx = canvas.getContext("2d")
