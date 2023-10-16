@@ -5,7 +5,7 @@ const canvasSize = {
   height:  1000
 }
 
-const tileSize = 10
+const tileSize = 100
 
 const canvas = document.getElementById("main-canvas")
 const ctx = canvas.getContext("2d")
@@ -79,14 +79,45 @@ const tiles = [
 
 function drawTile(pos, tileIndex, clear=false){
   const tileData = tiles[tileIndex].points
-  ctx.beginPath()
   ctx.fillStyle = color
-  for(let i = 0; i < tileData.length; i++){
-    const rectData = tileData[i]
-    ctx.rect(pos.x+rectData[0]*tilePixel, pos.y+rectData[1]*tilePixel, rectData[2]*tilePixel, rectData[3]*tilePixel)
+  ctx.strokeStyle="white"
+  ctx.lineWidth = tilePixel * 4 - 0.1
+  const approx = Math.PI * 0.001
+  if([4, 5, 6, 7].includes(tileIndex)){
+    ctx.beginPath()
+    // arc(x, y, radius, startAngle, endAngle)
+    switch(tileIndex){
+      case 4:
+        ctx.arc(pos.x+tilePixel*10, pos.y+tilePixel*10, tilePixel * 5 - tilePixel * 0.05, degToRad(177), degToRad(273))
+        // ctx.arc(pos.x+tilePixel*10, pos.y+tilePixel*10, tilePixel*5, Math.PI-approx, 3/2*Math.PI + approx)
+        break
+      case 5:
+        ctx.arc(pos.x, pos.y+tilePixel*10, tilePixel * 5 - tilePixel * 0.05, degToRad(267), degToRad(3))
+        // ctx.arc(pos.x, pos.y+tilePixel*10, tilePixel*5, 3/2*Math.PI-approx, 0 + approx)
+        break
+      case 6:
+        ctx.arc(pos.x, pos.y, tilePixel * 5 - tilePixel * 0.05, degToRad(357), degToRad(93))
+        // ctx.arc(pos.x, pos.y, tilePixel*5, 0-approx, Math.PI /  2 + approx)
+        break;
+      case 7:
+        ctx.arc(pos.x + tilePixel * 10, pos.y, tilePixel * 5 - tilePixel * 0.05, degToRad(87), degToRad(183))
+        // ctx.arc(pos.x + tilePixel * 10, pos.y, tilePixel*5, Math.PI / 2 -approx, Math.PI + approx)
+        break;
+    }
+    ctx.stroke()
+    ctx.closePath()
+
+  } else {
+    ctx.beginPath()
+    for(let i = 0; i < tileData.length; i++){
+      const rectData = tileData[i]
+      ctx.rect(pos.x+rectData[0]*tilePixel, pos.y+rectData[1]*tilePixel, rectData[2]*tilePixel, rectData[3]*tilePixel)
+    }
+    ctx.fill()
+
+    ctx.closePath()
+
   }
-  ctx.fill()
-  ctx.closePath()
 }
 
 // drawTile(tilePosition, 3)
@@ -184,6 +215,7 @@ async function drawGrid(){
 getGridData()
 
 drawGrid()
+// drawTile({x: 1, y: 1}, 4)
 
 function reset(){
   console.log("test")
@@ -198,3 +230,7 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+
+function degToRad(deg){
+  return deg * (Math.PI/180);
+}
