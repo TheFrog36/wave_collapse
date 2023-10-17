@@ -1,8 +1,8 @@
 "use strict"
 
 const canvasSize = {
-  width:  10000,
-  height:  10000
+  width:  1000,
+  height:  1000
 }
 
 const tileSize = 10
